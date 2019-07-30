@@ -1,0 +1,7 @@
+*.txt
+.idea/
+*.xlsx
+*.pyc
+experiment.py
+learner/results
+rtd_model/
