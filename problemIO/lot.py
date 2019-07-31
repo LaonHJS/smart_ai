@@ -3,25 +3,6 @@ from copy import deepcopy as cp
 
 class Lot(object):
 
-
-    # # Clone Lot
-    # def __init__(self, lot):
-    #     self.lotId = lot.lotId
-    #     self.productId = lot.productId
-    #     self.flowId = lot.flowId
-    #     self.flowNumber = lot.flowNumber
-    #     self.lotStatus = lot.lotStatus
-    #     self.lotQuantity = lot.lotQuantity
-    #     self.UOMofQuantity = lot.UOMofQuantity
-    #     self.currentOperationId = lot.currentOperationId
-    #     self.currentResourceId = lot.currentResourceId
-    #     self.currentOperationArrivalTime = lot.currentOperationArrivalTime
-    #     self.currentOperationStartTime = lot.currentOperationStartTime
-    #     self.factoryInTime = lot.factoryInTime
-    #     self.lotLocation = lot.lotLocation
-    #     self.lotPriority = lot.lotPriority
-    #     self.lotDueDate = lot.lotDueDate
-
     # Default Constructor
     def __init__(self, lotId, productId, flowId, flowNumber, lotQuantity, lotPriority, lotDueDate, factoryInTime, lotLocation):
         # Inherited Information

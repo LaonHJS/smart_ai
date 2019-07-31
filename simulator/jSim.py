@@ -200,10 +200,10 @@ class JSim(JSimUtil):
             currentLot.reservedSameResource = False
         else:
             currentLot.recordHistory("MOVE END", self.T, "WAIT", currentLot.lotLocation, event.resourceId)
-            self.update_confliting_lots(currentLot)
+            self.update_conflicting_lots(currentLot)
         if event.resourceId == 'MD_RES':
             currentLot.recordHistory("TRACK IN", self.T, "PROCESS", event.resourceId, event.resourceId)
-            self.update_confliting_lots(currentLot)
+            self.update_conflicting_lots(currentLot)
             self.appendEvent(self.give_event_number(), currentOperationId, event.lotId, event.resourceId, "TrackInFinish", self.T, 300)
         else:
             currentResource = self.info.resourceMap[event.resourceId]
@@ -214,7 +214,7 @@ class JSim(JSimUtil):
             if currentResource.resourceStatus == 'IDLE':  # Setup이 필요 없으면서 IDLE인 경우
                 currentLot.currentOperationStartTime = self.T
                 currentLot.recordHistory("TRACK IN", self.T, "PROCESS", event.resourceId, event.resourceId)
-                self.update_confliting_lots(currentLot)
+                self.update_conflicting_lots(currentLot)
                 currentResource.recordHistory("START PROD", self.T, "RUN", currentLot.productId, event.lotId,
                                               self.info.flowMap.get(currentLot.flowId).getNowOperation(currentLot.flowNumber),
                                               self.info.flowMap.get(currentLot.flowId).getNowOperation(currentLot.flowNumber - 1))
@@ -239,7 +239,7 @@ class JSim(JSimUtil):
         if event.resourceId == "MD_RES":
             self.info.eventList.remove(event)
             currentLot.recordHistory('TRACK OUT', self.T, 'WAIT', 'END', '', 'SHIP')
-            self.update_confliting_lots(currentLot)
+            self.update_conflicting_lots(currentLot)
             currentLot.recordHistory('FACTORY OUT', self.T, 'WAIT', 'END', '', '')
             self.KPIs.TATMap[event.lotId] = self.T - currentLot.factoryInTime
             if self.T < currentLot.lotDueDate:
@@ -258,10 +258,10 @@ class JSim(JSimUtil):
             currentOperationId = self.info.flowMap[currentLot.flowId].getNowOperation(currentLot.flowNumber)
             if currentLot.reservedSameResource:
                 currentLot.recordHistory('TRACK OUT', self.T, 'WAIT', currentResource.resourceId, currentResource.resourceId, currentOperationId)
-                self.update_confliting_lots(currentLot)
+                self.update_conflicting_lots(currentLot)
             else:
                 currentLot.recordHistory('TRACK OUT', self.T, 'WAIT', 'WAY TO ' + currentOperationId[0:2] + '_STOCK', '', currentOperationId)
-                self.update_confliting_lots(currentLot)
+                self.update_conflicting_lots(currentLot)
             self.trackOutFinish(Event(self.give_event_number(), currentLot.currentOperationId, event.lotId, event.resourceId, 'TrackOutFinish', self.T, 0))
 
     def trackOutFinish(self, event):
@@ -273,7 +273,7 @@ class JSim(JSimUtil):
             self.moveFinish(Event(self.give_event_number(), currentLot.currentOperationId, event.lotId, event.resourceId, 'MoveFinish', self.T, 0))
         else:
             currentLot.recordHistory('MOVE START', self.T, 'MOVE', currentLot.lotLocation, '')
-            self.update_confliting_lots(currentLot)
+            self.update_conflicting_lots(currentLot)
             self.appendEvent(self.give_event_number(), currentLot.currentOperationId, event.lotId, '', 'TrackOutMoveFinish', self.T, self.parameters.moveTime)
             self.updateWIPStatus(event.type, currentLot.currentOperationId, currentLot)
         currentResource = self.info.resourceMap[event.resourceId]
@@ -283,7 +283,7 @@ class JSim(JSimUtil):
         assert isinstance(currentLot, Lot)
         toLocationId = currentLot.currentOperationId[0:2] + '_STOCK'
         currentLot.recordHistory('MOVE END', self.T, 'WAIT', toLocationId, "")
-        self.update_confliting_lots(currentLot)
+        self.update_conflicting_lots(currentLot)
         # move end 처리 -> 해당 operation의 stock에 대기 중인 상황 시작
         if currentLot.currentOperationId != 'MD':
             temp_productId = currentLot.productId
@@ -294,7 +294,7 @@ class JSim(JSimUtil):
                 self.num_of_lot_count_in_stocker[currentLot.currentOperationId[0:2]][temp_productId][temp_flow_number] = currentLot.lotQuantity
         if currentLot.currentOperationId == "MD":
             currentLot.recordHistory('MOVE START', self.T, 'MOVE', 'MD_RES', 'MD_RES')
-            self.update_confliting_lots(currentLot)
+            self.update_conflicting_lots(currentLot)
             self.appendEvent(self.give_event_number(), currentLot.currentOperationId, currentLot.lotId, 'MD_RES', 'MoveFinish', self.T, self.parameters.moveTime)
         # TrackOutMoveFinish에서 이미 예약된 lot은 ReserveMoveWaiting 처리
         elif currentLot.reservedResourceId != "":
@@ -369,7 +369,7 @@ class JSim(JSimUtil):
                                 print("Error: this lot is not in the DA Stocker", selectedLot.lotId, currentOperationId)
                     toLocationId = selectedResource.resourceId[0:3] + "BUF" + selectedResource.resourceId[6:]
                     selectedLot.recordHistory('MOVE START', self.T, 'MOVE', toLocationId, selectedResource.resourceId)
-                    self.update_confliting_lots(selectedLot)
+                    self.update_conflicting_lots(selectedLot)
                     self.updateWIPStatus("MoveWaiting", currentOperationId, selectedLot)
                     self.appendEvent(self.give_event_number(), currentOperationId, selectedLot.lotId, selectedResource.resourceId, 'MoveFinish', self.T, self.parameters.moveTime)
                     wait_candlot_list.remove(selectedLot)
@@ -402,7 +402,7 @@ class JSim(JSimUtil):
             if currentResource.resourceStatus == "IDLE":
                 latestLotHistory = currentLot.historyList[-1]
                 currentLot.recordHistory("TRACK IN", self.T, "PROCESS", currentResourceId, currentResourceId)
-                self.update_confliting_lots(currentLot)
+                self.update_conflicting_lots(currentLot)
                 if "_" not in currentLot.lotId:
                     self.KPIs.waitingMap[currentLot.lotId] += self.T - latestLotHistory.eventTime
                 currentResource.recordHistory("START PROD", self.T, "RUN", currentLot.productId, currentLot.lotId,
@@ -435,7 +435,7 @@ class JSim(JSimUtil):
                     reservedResource.resourceBuffer.append(currentLot.lotId)
                     toLocationId = reservedResource.resourceId[0:3] + 'BUF' + reservedResource.resourceId[6:]
                     currentLot.recordHistory('MOVE START', self.T, 'MOVE', toLocationId, reservedResource.resourceId)
-                    self.update_confliting_lots(currentLot)
+                    self.update_conflicting_lots(currentLot)
                     self.updateMoveableResource(reservedResource)
                     self.updateWIPStatus(event.type, currentOperationId, currentLot)
                     self.appendEvent(self.give_event_number(), currentOperationId, currentLot.lotId, reservedResource.resourceId, 'MoveFinish', self.T, self.parameters.moveTime)
@@ -449,7 +449,7 @@ class JSim(JSimUtil):
                 else:
                     toLocationId = reservedResource.resourceId[0:3] + 'BUF' + reservedResource.resourceId[6:]
                     currentLot.recordHistory('MOVE START', self.T, 'MOVE', toLocationId, reservedResource.resourceId)
-                    self.update_confliting_lots(currentLot)
+                    self.update_conflicting_lots(currentLot)
                     self.updateWIPStatus(event.type, currentOperationId, currentLot)
                     self.appendEvent(self.give_event_number(), currentOperationId, currentLot.lotId, reservedResource.resourceId, 'MoveFinish', self.T, self.parameters.moveTime)
                     temp_productId = currentLot.productId
@@ -542,8 +542,6 @@ class JSim(JSimUtil):
                 self.counters.mgzCount += 1
                 if 'DA' in loc:
                     self.counters.mgzDACount += 1
-
-        # self.updateWIPPerTime(currentLot)
         # For State
         self.conflict_status_init()
         move_waiting = True

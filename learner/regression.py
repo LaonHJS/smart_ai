@@ -128,8 +128,9 @@ class DNN_training(object):
             print('Epoch', 'TrainingError_w', 'TrainingError_i', 'ValidationError_w', 'ValidationError_i')
 
             for epoch in range(training_epoch):
-                w_path_ckpt = os.path.abspath(os.path.join(os.getcwd(),os.pardir)) + '/sim_big' + '/rtd_model/' + model_name + '/' + 'waiting'
-                i_path_ckpt = os.path.abspath(os.path.join(os.getcwd(), os.pardir)) + '/sim_big' + '/rtd_model/' + model_name + '/' + 'idle'
+                dir_name = os.getcwd()
+                w_path_ckpt = dir_name + '/rtd_model/' + model_name + '/' + 'waiting'
+                i_path_ckpt = dir_name+ '/rtd_model/' + model_name + '/' + 'idle'
                 avg_cost = 0
                 w_avg_cost = 0
                 i_avg_cost = 0
@@ -181,7 +182,8 @@ class DNN_test(object):
         self.net = self.build_network()
 
         saver = tf.train.Saver()
-        path_ckpt = os.path.abspath(os.path.join(os.getcwd(), os.pardir)) + '/sim_big' + '/rtd_model/' + self.file_name +'/' + self.target + '/' + str(epoch) + '/model.ckpt'
+        dir_name = os.getcwd()
+        path_ckpt = dir_name + '/rtd_model/' + self.file_name +'/' + self.target + '/' + str(epoch) + '/model.ckpt'
         saver.restore(self.sess, path_ckpt)
 
     def build_network(self):

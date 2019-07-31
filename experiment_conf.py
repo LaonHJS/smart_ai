@@ -9,17 +9,19 @@ pr = ProblemReaderDB(Table_name)
 
 # Simulation Setting
 sp.DARTDPolicy = 'learner'
-sp.viewerFileWrite = False
+sp.viewerFileWrite = True
 
 # Data Generation Setting
-sp.iteration = 3
+sp.iteration = 1
 sp.trainingFileName = 'test_sample_not_normal'
-data_type = 'training'
+data_type = 'validation'
 sp.normalization = True
+
+
 '''====== Functions ======'''
 # Performance Test
-# performance_test(sp.DARTDPolicy, pr, 1)
+performance_test(sp, pr, 100, 'small_test')
 
 # Training Data Generation
-generate_training_data(sp, pr, data_type)
+# generate_training_data(sp, pr, data_type)
 

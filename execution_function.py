@@ -13,10 +13,10 @@ def performance_test(sim_parameter, problem_reader, problem_num, model_name='b_6
     if sim_parameter.DARTDPolicy == 'learner':
         with graph1.as_default():
             sess1 = tf.Session(graph=graph1)
-            DA_idleDNN = DNN_test(sess1, model_name, 27, nodes_per_layer, 'idle', 50)
+            DA_idleDNN = DNN_test(sess1, model_name, 27, nodes_per_layer, 'idle', 51)
         with graph2.as_default():
             sess2 = tf.Session(graph=graph2)
-            DA_waitingDNN = DNN_test(sess2, model_name, 27, nodes_per_layer, 'waiting', 50)
+            DA_waitingDNN = DNN_test(sess2, model_name, 27, nodes_per_layer, 'waiting', 51)
     pi = problem_reader.generateProblem(problem_num, False)
     """ ------------------------------------- """
     if sim_parameter.DARTDPolicy == 'learner':

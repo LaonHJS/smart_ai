@@ -337,12 +337,7 @@ class JSimUtil(object):
 
             self.lot_count_per_loc[lat_from_event + '/' + lat_current_event + '/' + lat_to_location] += 1
 
-            # model_set = self.conflict_dict[temp_product_id][temp_operation_id]
-            # for model in model_set:
-            #     self.lot_set_of_loc_per_model[model][
-            #         lat_from_event + '/' + lat_current_event + '/' + lat_to_location].add(lot_id)
-
-    def update_confliting_lots(self, lot):
+    def update_conflicting_lots(self, lot):
         assert isinstance(lot, Lot)
         temp_product_id = lot.productId
         temp_operation_id = lot.currentOperationId
