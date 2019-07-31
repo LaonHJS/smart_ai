@@ -5,10 +5,12 @@ learning_rate = 0.0001
 training_epoch = 200
 batch_size = 32
 model_name = 'small_test'
-print('learning_rate=', learning_rate, 'training_epoch=', training_epoch, 'batch_size=', batch_size, 'model_name=', model_name)
 node_per_hidden_layers = [64, 32, 16]
-learner = DNN_training('test_sample_normal_training.csv', node_per_hidden_layers)
-learner.read_validate_data('test_sample_normal_validation.csv')
+training_data_name = 'test_sample_normal_training.csv'
+validation_data_name = 'test_sample_normal_validation.csv'
+learner = DNN_training(training_data_name, node_per_hidden_layers)
+learner.read_validate_data(validation_data_name)
+print('learning_rate=', learning_rate, 'training_epoch=', training_epoch, 'batch_size=', batch_size, 'model_name=', model_name)
 performance_dict = learner.conduct_learning(learning_rate=learning_rate, training_epoch=training_epoch, batch_size=batch_size, model_name=model_name)
 
 fig = plt.figure()

@@ -13,7 +13,7 @@ sp.viewerFileWrite = True
 
 # Data Generation Setting
 sp.iteration = 1
-sp.trainingFileName = 'test_sample_not_normal'
+sp.trainingFileName = 'test_sample'
 data_type = 'validation'
 sp.normalization = True
 
